@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 
+static const float gravity = 9.81;
+
 void game_input(InputState *input) {
     SDL_Event event;
 
@@ -23,19 +25,36 @@ void game_input(InputState *input) {
 }
 
 void game_update(const InputState input, const float delta_time) {
+    // Update player velocity
+    update_player_velocity(input);    
+
+    // Update player position
+    player.pos.x += player.velocity.dx * delta_time;
+    player.pos.y += player.velocity.dy * delta_time;
+
+    // Update player rectangle
+    player.rect.x = player.pos.x;
+    player.rect.y = player.pos.y;
+}
+
+/* STATIC FUNCTIONS */
+static void update_player_velocity(const InputState input)
+{
+    // Set inactivity speed to 0
+    player.speed = 0;
+
     if ((input.move_up == true) && (input.move_right == true)) {
-        player.speed = 1.0f / 1.414f;
+        player.speed += 1.0f / 1.414f;
     } else if ((input.move_up == true) && (input.move_left == true)) {
-        player.speed = 1.0f / 1.414f;
+        player.speed += 1.0f / 1.414f;
     } else if ((input.move_down == true) && (input.move_right == true)) {
-        player.speed = 1.0f / 1.414f;
+        player.speed += 1.0f / 1.414f;
     } else if ((input.move_down == true) && (input.move_left == true)) {
-        player.speed = 1.0f / 1.414f;
+        player.speed += 1.0f / 1.414f;
     }
     else {
-        player.speed = 1.0f;
+        player.speed += 1.0f;
     }
-
 
     // Update player dy velocity
     if ((input.move_up == true) && (input.move_down == true)) {
@@ -50,6 +69,8 @@ void game_update(const InputState input, const float delta_time) {
         }
     }
 
+    player.velocity.dy -= gravity;
+
     // Update player dx velocity
     if ((input.move_left == true) && (input.move_right == true)) {
         player.velocity.dx = 0.0f;
@@ -62,12 +83,4 @@ void game_update(const InputState input, const float delta_time) {
             player.velocity.dx = 0.0f;
         }
     }
-
-    // Update player position
-    player.pos.x += player.velocity.dx * delta_time;
-    player.pos.y += player.velocity.dy * delta_time;
-
-    // Update player rectangle
-    player.rect.x = player.pos.x;
-    player.rect.y = player.pos.y;
 }

@@ -1,0 +1,17 @@
+RULES:
+	Topdown 2d adventure (open world)
+	Movement -> WASD
+	Attacking/Aiming -> Mouse (Show equipment range (Maybe not idk))
+	
+
+
+
+
+TODO:
+	Implement player movement (Acceleration/De.. and Dash/Roll implementation (maybe jump))
+	Implement collision
+
+	Implement terrain generation (perlin noise: git@github.com:amithm3/nPerlinNoise.git)
+	Implement draw order
+
+	Settle on a camera movement (for now leave it as is (static))
