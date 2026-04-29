@@ -58,9 +58,6 @@ int main(int argc, char* argv[]) {
 
         // RENDER
         renderer_render(renderer, player.texture);
-
-        // Caps the frame rate to MAX_REFRESH_RATE for lower CPU usage
-        // SDL_DelayPrecise(SDL_NS_TO_MS(1000000000 / MAX_REFRESH_RATE));
     }
 
     return 0;
