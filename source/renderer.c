@@ -2,7 +2,9 @@
 #include "SDL3/SDL_log.h"
 #include "macros.h"
 #include "player.h"
+#include "terrain.h"
 #include "renderer.h"
+
 
 #include <SDL3_image/SDL_image.h>
 
@@ -22,8 +24,30 @@ inline int renderer_init(SDL_Window **window, SDL_Renderer **renderer) {
     return 0;
 }
 
-inline void renderer_render(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Rect *rect) {
+inline void renderer_render(SDL_Renderer *renderer, SDL_Texture *texture, SDL_FRect *rect) {
     SDL_RenderClear(renderer);
     SDL_RenderTexture(renderer, texture, NULL, rect);
+    SDL_RenderPresent(renderer);
+}
+
+// Renders everything with the correct order
+// Currently only the player and chunks
+void refresh(SDL_Renderer *renderer, ChunkMap_t *map){
+    SDL_RenderClear(renderer);
+
+    // Add background/terrain chunks
+    for(int y = 0; y < 2; y++){
+        for(int x = 0; x < 2; x++){
+            Position pos = {x,y};
+            Chunk_t *chunk = chunk_get(renderer, map, pos);
+
+            SDL_RenderTexture(renderer, chunk->texture, NULL, &chunk->rect);
+        }
+    }
+
+    // Add player
+    SDL_RenderTexture(renderer, player.texture, NULL, &player.rect);
+
+    // Render
     SDL_RenderPresent(renderer);
 }

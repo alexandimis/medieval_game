@@ -4,6 +4,7 @@
 #include "renderer.h"
 #include "game.h"
 #include "main.h"
+#include "terrain.h"
 
 #include <SDL3/SDL.h>
 #include <stdio.h>
@@ -23,6 +24,10 @@ int main(int argc, char* argv[]) {
     // Player
     const char name[MAX_NAME_LENGTH] = "Bob";
     player_init(name);
+
+    // Terrain variables
+    ChunkMap_t *map = SDL_malloc(sizeof(ChunkMap_t));
+    map->chunks = NULL;
 
     // Event handling variables
     InputState input = {false};
@@ -55,8 +60,12 @@ int main(int argc, char* argv[]) {
         // Update the game
         game_update(&input, delta_time, FPS);
 
+        // Load chunks? Not yet ig
+        // refresh_chunks()
+
         // RENDER
-        renderer_render(renderer, player.texture, &player.rect);
+        refresh(renderer, map);
+        // renderer_render(renderer, player.texture, &player.rect);
     }
 
     return 0;
