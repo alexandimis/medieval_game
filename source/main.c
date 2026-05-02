@@ -17,8 +17,7 @@ Player player;
 int main(int argc, char* argv[]) {
     /* INITIALIZATIONS */
     SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-    if (renderer_init(&window, &renderer) != 0) { return 1; }
+    if (renderer_init(&window) != 0) { return 1; }
     if (!SDL_Init(SDL_INIT_VIDEO)) { return 1; }
 
     // Player
@@ -64,7 +63,7 @@ int main(int argc, char* argv[]) {
         // refresh_chunks()
 
         // RENDER
-        refresh(renderer, map);
+        refresh(map);
         // renderer_render(renderer, player.texture, &player.rect);
     }
 

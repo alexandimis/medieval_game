@@ -40,7 +40,7 @@ typedef struct{
 
 /* FUNCTIONS */
 void chunk_map_destroy(ChunkMap_t *map);
-Chunk_t *chunk_get(SDL_Renderer *renderer, ChunkMap_t *map, Position pos);
+Chunk_t *chunk_get(ChunkMap_t *map, Position pos);
 
 
 

@@ -1,3 +1,4 @@
+#include "renderer.h"
 #include "terrain.h"
 
 #define STB_PERLIN_IMPLEMENTATION
@@ -5,7 +6,10 @@
 #include <uthash.h>
 #include <SDL3_image/SDL_image.h>
 
-static inline Tile_t get_tile(SDL_Renderer *renderer, Position pos, Position cpos) {
+// Extarnel variables
+extern SDL_Renderer *renderer;
+
+static inline Tile_t get_tile(Position pos, Position cpos) {
 
     Tile_t target;
     target.rect = (SDL_FRect){
@@ -49,7 +53,7 @@ static inline Tile_t get_tile(SDL_Renderer *renderer, Position pos, Position cpo
     return target;
 }
 
-Chunk_t *chunk_load(SDL_Renderer *renderer, Position cpos) {
+Chunk_t *chunk_load(Position cpos) {
     SDL_Texture *texture = SDL_CreateTexture(
         renderer,
         SDL_PIXELFORMAT_RGBA8888,
@@ -64,7 +68,7 @@ Chunk_t *chunk_load(SDL_Renderer *renderer, Position cpos) {
     for(int y = 0; y < CHUNK_SIZE; y++){
         for(int x = 0; x < CHUNK_SIZE; x++){ 
             Position pos = {x, y};
-            Tile_t tile = get_tile(renderer, pos, cpos);
+            Tile_t tile = get_tile(pos, cpos);
 
             // Add tile to the chunk texture
             SDL_RenderTexture(renderer, tile.texture, NULL, &tile.rect);
@@ -123,10 +127,10 @@ void chunk_map_destroy(ChunkMap_t *map){
 // General purpose function
 // Returns a chunk with given coordinates
 // If the chunk is not found it generates/loads it, adds it in the map and returns it
-Chunk_t *chunk_get(SDL_Renderer *renderer, ChunkMap_t *map, Position pos){
+Chunk_t *chunk_get(ChunkMap_t *map, Position pos){
     Chunk_t *chunk = chunk_map_get(map, pos);
     if(!chunk){
-        chunk = chunk_load(renderer, pos);
+        chunk = chunk_load(pos);
         chunk_map_add(map, chunk);
     }
     return chunk;
