@@ -4,6 +4,7 @@
 #include "renderer.h"
 #include "game.h"
 #include "main.h"
+#include "terrain.h"
 
 #include <SDL3/SDL.h>
 #include <stdio.h>
@@ -16,13 +17,16 @@ Player player;
 int main(int argc, char* argv[]) {
     /* INITIALIZATIONS */
     SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-    if (renderer_init(&window, &renderer) != 0) { return 1; }
+    if (renderer_init(&window) != 0) { return 1; }
     if (!SDL_Init(SDL_INIT_VIDEO)) { return 1; }
 
     // Player
     const char name[MAX_NAME_LENGTH] = "Bob";
     player_init(name);
+
+    // Terrain variables
+    ChunkMap_t *map = SDL_malloc(sizeof(ChunkMap_t));
+    map->chunks = NULL;
 
     // Event handling variables
     InputState input = {false};
@@ -55,8 +59,12 @@ int main(int argc, char* argv[]) {
         // Update the game
         game_update(&input, delta_time, FPS);
 
+        // Load chunks? Not yet ig
+        // refresh_chunks()
+
         // RENDER
-        renderer_render(renderer, player.texture);
+        refresh(map);
+        // renderer_render(renderer, player.texture, &player.rect);
     }
 
     return 0;

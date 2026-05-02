@@ -21,10 +21,18 @@ add_executable(game
         source/renderer.h
         source/player.c
         source/player.h
+        source/terrain.c
+        source/terrain.h
         source/fileio.c
         source/fileio.h
         source/game.c
         source/macros.h
+)
+
+# Include external header files
+target_include_directories(game PRIVATE
+    ${CMAKE_SOURCE_DIR}/deps/uthash
+    ${CMAKE_SOURCE_DIR}/deps/perlin_noise
 )
 
 # Link SDL3 to the game
