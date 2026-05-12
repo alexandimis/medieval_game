@@ -9,12 +9,17 @@
 // Extarnel variables
 extern SDL_Renderer *renderer;
 
-static inline Tile_t get_tile(Position pos, Position cpos) {
+// Generate a tile using perlin noise.
+// Input: 
+// tpos(tile absolute position)
+// cpos(chunk absolute position of the tile)
+// Output: Ready to render Tile_t
+static Tile_t get_tile(Position tpos, Position cpos) {
 
     Tile_t target;
     target.rect = (SDL_FRect){
-        pos.x*TILE_SIZE, 
-        pos.y*TILE_SIZE, 
+        tpos.x*TILE_SIZE, 
+        tpos.y*TILE_SIZE, 
         TILE_SIZE, 
         TILE_SIZE
     };
@@ -28,8 +33,8 @@ static inline Tile_t get_tile(Position pos, Position cpos) {
 
     float scale = 0.08f;
     float noise = stb_perlin_noise3(
-        (cpos.x * CHUNK_SIZE + pos.x) * scale, 
-        (cpos.y * CHUNK_SIZE + pos.y) * scale, 
+        (cpos.x * CHUNK_SIZE + tpos.x) * scale, 
+        (cpos.y * CHUNK_SIZE + tpos.y) * scale, 
         0.0f, 
         0, 
         0, 
@@ -53,6 +58,7 @@ static inline Tile_t get_tile(Position pos, Position cpos) {
     return target;
 }
 
+// Generates and loads a chunk tile-by-tile
 Chunk_t *chunk_load(Position cpos) {
     SDL_Texture *texture = SDL_CreateTexture(
         renderer,
@@ -83,8 +89,8 @@ Chunk_t *chunk_load(Position cpos) {
     chunk->pos = (Position)cpos;
     chunk->texture = texture;
     chunk->rect = (SDL_FRect){
-        cpos.x * CHUNK_SIZE * TILE_SIZE,
-        cpos.y * CHUNK_SIZE * TILE_SIZE,
+        0,
+        0,
         CHUNK_SIZE * TILE_SIZE,
         CHUNK_SIZE * TILE_SIZE
     };
@@ -92,6 +98,13 @@ Chunk_t *chunk_load(Position cpos) {
     return chunk;
 }
 
+// Searches for a chunk
+// Input:
+// ChunkMat_t *map; the hash map of all chunks
+// Postion pos; the absolute position ofthe chunk (Use as key)
+// Output:
+// If found: A pointer to the chunk
+// If not found: NULL
 Chunk_t *chunk_map_get(ChunkMap_t *map, Position pos){
     Chunk_t *target = NULL;
     HASH_FIND(hh, map->chunks, &pos, sizeof(pos), target);
@@ -107,6 +120,7 @@ void chunk_map_add(ChunkMap_t *map, Chunk_t *chunk){
     HASH_ADD(hh, map->chunks, pos, sizeof(Position), chunk);
 }
 
+// Destroys/free contents of ChunkMap_t *map
 void chunk_map_destroy(ChunkMap_t *map){
     Chunk_t *chunk;
     Chunk_t *tmp;
@@ -124,9 +138,8 @@ void chunk_map_destroy(ChunkMap_t *map){
     map->chunks = NULL;
 }
 
-// General purpose function
-// Returns a chunk with given coordinates
-// If the chunk is not found it generates/loads it, adds it in the map and returns it
+// Returns a pointer to the chunk
+// If it's not generated, it generates it first and then returns it
 Chunk_t *chunk_get(ChunkMap_t *map, Position pos){
     Chunk_t *chunk = chunk_map_get(map, pos);
     if(!chunk){

@@ -23,9 +23,12 @@ add_executable(game
         source/player.h
         source/terrain.c
         source/terrain.h
+        source/camera.c
+        source/camera.h
         source/fileio.c
         source/fileio.h
         source/game.c
+        source/game.h
         source/macros.h
 )
 

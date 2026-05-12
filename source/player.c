@@ -1,3 +1,4 @@
+#include "macros.h"
 #include "player.h"
 
 #include <string.h>
@@ -8,8 +9,8 @@ inline void player_init(const char name[MAX_NAME_LENGTH]) {
     player.name[MAX_NAME_LENGTH - 1] = '\0';
 
     // Player position
-    player.pos.x = 0.0f;
-    player.pos.y = 0.0f;
+    player.pos.x = DEFAULT_WINDOW_WIDTH/2;
+    player.pos.y = DEFAULT_WINDOW_HEIGHT/2;
     player.rect.x = player.pos.x;
     player.rect.y = player.pos.y;
 

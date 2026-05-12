@@ -1,3 +1,9 @@
+How to build (while inside "medieval_game"):
+mkdir build; cd build; cmake ..; make
+
+To run:
+cd bin; ./game
+
 RULES:
 	-Topdown 2d adventure (open world)
 	-Movement -> WASD
@@ -19,4 +25,8 @@ TODO:
 	-Implement a method to greet the user and get the player name (terraria type shit)
 
 	-Implement terrain generation (perlin noise: git@github.com:amithm3/nPerlinNoise.git)
+	-Implement camera movement
 	-Implement draw order
+
+	-Optimize player/camera movement
+	-Optimize terrain generation and chunk loading

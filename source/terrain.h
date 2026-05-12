@@ -11,6 +11,7 @@
 /* DEFINES */
 #define CHUNK_SIZE 16
 #define TILE_SIZE 16
+#define CHUNK_PIXELS (CHUNK_SIZE * TILE_SIZE)
 
 /* STRUCTS */
 typedef struct{
@@ -20,10 +21,9 @@ typedef struct{
     SDL_Texture *texture;
 }Tile_t;
 
-
+// Every chunk loads one texture instead of CHUNK_SIZE-by-CHUNK_SIZE tiles
 typedef struct{
     bool loaded;
-    Position pos;
 
     // SDL Rendering
     SDL_Texture *texture;
@@ -31,8 +31,10 @@ typedef struct{
 
     // Hash handle
     UT_hash_handle hh;
+    Position pos;       // It's also used as the hash key
 }Chunk_t;
 
+// All loaded chunks are stored in a hash (ChunkMap_t)
 typedef struct{
     Chunk_t *chunks;
 }ChunkMap_t;
